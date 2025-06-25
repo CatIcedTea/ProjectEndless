@@ -1,4 +1,3 @@
-using DG.Tweening;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -33,12 +32,16 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody _rigidBody;
     private float _moveSpeed;
     private float _stamina;
+    private float _regenTimer;
 
 
     void Start()
     {
         _moveSpeed = _acceleration;
         _rigidBody = GetComponent<Rigidbody>();
+
+        _stamina = _maxStamina;
+        _regenTimer = 0;
     }
 
     // Update is called once per frame
@@ -47,11 +50,16 @@ public class PlayerMovement : MonoBehaviour
         //Check if it is on floor
         _isOnFloor = Physics.SphereCast(transform.position, 0.25f, Vector3.down, out RaycastHit hit, _playerHeight * transform.localScale.y * 0.5f - 0.25f + 0.02f);
 
-        if (_isSprinting)
+        //Handles Stamina
+        if (_regenTimer > 0)
+            _regenTimer -= Time.deltaTime;
+
+        if (_isSprinting && !_isCrouching && _moveDir != Vector3.zero)
         {
             if (_stamina > 0)
             {
                 _stamina -= _sprintStaminaCost * Time.deltaTime;
+                _regenTimer = _staminaRegenTimer;
                 if (_stamina <= 0)
                 {
                     _isSprinting = false;
@@ -62,15 +70,13 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (_stamina < _maxStamina)
+            if (_stamina < _maxStamina && _regenTimer <= 0)
             {
                 _stamina += _staminaRegenSpeed * Time.deltaTime;
                 if (_stamina > _maxStamina)
                     _stamina = _maxStamina;
             }
         }
-
-        Debug.Log(_stamina);
     }
 
     public void HandleMovement(Vector2 input)
@@ -86,7 +92,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandleSprint(bool isSprinting)
     {
-        if (_stamina <= 0)
+        if (_stamina <= 0 || _isCrouching)
             return;
 
         _isSprinting = isSprinting;
@@ -94,11 +100,14 @@ public class PlayerMovement : MonoBehaviour
         if (isSprinting && !_isCrouching)
             _moveSpeed = _sprintAcceleration;
         else
+        {
             _moveSpeed = _acceleration;
+        }
     }
 
     public void HandleCrouch(bool isCrouching)
     {
+        _isSprinting = false;
         _isCrouching = isCrouching;
 
         if (isCrouching)
@@ -112,5 +121,15 @@ public class PlayerMovement : MonoBehaviour
             _moveSpeed = _acceleration;
             GetComponent<CapsuleCollider>().height = 2f;
         }
+    }
+
+    public float GetStamina()
+    {
+        return _stamina;
+    }
+
+    public float GetMaxStamina()
+    {
+        return _maxStamina;
     }
 }

@@ -10,11 +10,14 @@ public class InputHandler : MonoBehaviour
     private InputAction _sprintAction;
     private InputAction _crouchAction;
     private InputAction _zoomAction;
+    private InputAction _attackAction;
 
     private PlayerMovement _playerMovement;
     private PlayerCamera _playerCamera;
+    [SerializeField] PlayerAttackHandler _playerAttack;
 
     private void OnEnable()
+
     {
         inputActions.FindActionMap("Player").Enable();
 
@@ -29,6 +32,7 @@ public class InputHandler : MonoBehaviour
         _sprintAction = InputSystem.actions.FindAction("Sprint");
         _crouchAction = InputSystem.actions.FindAction("Crouch");
         _zoomAction = InputSystem.actions.FindAction("Zoom");
+        _attackAction = InputSystem.actions.FindAction("Attack");
     }
 
     private void Update()
@@ -47,6 +51,9 @@ public class InputHandler : MonoBehaviour
             _playerCamera.HandleZoom(true);
         if (_zoomAction.WasReleasedThisFrame())
             _playerCamera.HandleZoom(false);
+
+        if (_attackAction.WasPressedThisFrame())
+            _playerAttack.HandleAttack();
     }
 
     private void FixedUpdate()
