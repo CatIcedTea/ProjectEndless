@@ -30,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
     private bool _isCrouching;
     private Vector3 _moveDir;
     private Rigidbody _rigidBody;
+    private PlayerCamera _playerCamera;
     private float _moveSpeed;
     private float _stamina;
     private float _regenTimer;
@@ -39,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
     {
         _moveSpeed = _acceleration;
         _rigidBody = GetComponent<Rigidbody>();
+        _playerCamera = GetComponent<PlayerCamera>();
 
         _stamina = _maxStamina;
         _regenTimer = 0;
@@ -49,6 +51,8 @@ public class PlayerMovement : MonoBehaviour
     {
         //Check if it is on floor
         _isOnFloor = Physics.SphereCast(transform.position, 0.25f, Vector3.down, out RaycastHit hit, _playerHeight * transform.localScale.y * 0.5f - 0.25f + 0.02f);
+
+        _playerCamera.HandleWobble((1 - _stamina / _maxStamina) * 4);
 
         //Handles Stamina
         if (_regenTimer > 0)
@@ -82,12 +86,19 @@ public class PlayerMovement : MonoBehaviour
     public void HandleMovement(Vector2 input)
     {
         _moveDir = input.x * _playerBasis.right + input.y * _playerBasis.forward;
-        _rigidBody.AddForce(_moveDir * _moveSpeed, ForceMode.Force);
-
         if (_isOnFloor)
         {
+            _rigidBody.AddForce(_moveDir * _moveSpeed, ForceMode.Force);
             _rigidBody.linearDamping = _friction;
         }
+        else
+        {
+            _rigidBody.linearDamping = 0;
+            _rigidBody.AddForce(_moveDir * (_moveSpeed * 0.05f), ForceMode.Force);
+        }
+
+
+
     }
 
     public void HandleSprint(bool isSprinting)
@@ -120,7 +131,18 @@ public class PlayerMovement : MonoBehaviour
         {
             _moveSpeed = _acceleration;
             GetComponent<CapsuleCollider>().height = 2f;
+            _rigidBody.AddForce(Vector3.up * 3, ForceMode.Impulse);
         }
+    }
+
+    public bool GetCrouchingState()
+    {
+        return _isCrouching;
+    }
+
+    public bool IsMoving()
+    {
+        return _moveDir != Vector3.zero;
     }
 
     public float GetStamina()

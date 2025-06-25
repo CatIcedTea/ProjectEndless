@@ -8,6 +8,8 @@ TagManager:
   - EnemyHitbox
   - PlayerMelee
   - PlayerGun
+  - DamageFlash
+  - Enemy
   layers:
   - Default
   - TransparentFX

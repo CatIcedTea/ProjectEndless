@@ -8,12 +8,13 @@ public class PlayerCamera : MonoBehaviour
     private GameObject _cameraPos;
     private GameObject _cameraYRotation;
 
+    [SerializeField] private float _defaultNoiseAmplitude;
+    [SerializeField] private float _defaultNoiseFrequency;
+
     [Tooltip("Mouse Sensitivity")]
     [Header("Sensitivity")]
     [SerializeField] private float _sensitivityX;
     [SerializeField] private float _sensitivityY;
-
-    private PlayerMovement playerMovement;
 
     //The X rotation input
     private float _xRotation;
@@ -28,12 +29,6 @@ public class PlayerCamera : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public void HandleCamera(Vector2 cameraInput)
@@ -62,5 +57,28 @@ public class PlayerCamera : MonoBehaviour
         {
             DOTween.To(() => _playerCam.GetComponent<CinemachineCamera>().Lens.FieldOfView, x => _playerCam.GetComponent<CinemachineCamera>().Lens.FieldOfView = x, 90, 0.5f);
         }
+    }
+
+    public void HandleShake(float amount)
+    {
+        _playerCam.GetComponent<CinemachineBasicMultiChannelPerlin>().FrequencyGain = amount;
+        DOTween.To(() => _playerCam.GetComponent<CinemachineBasicMultiChannelPerlin>().FrequencyGain
+            , x => _playerCam.GetComponent<CinemachineBasicMultiChannelPerlin>().FrequencyGain = x, _defaultNoiseFrequency, 1f);
+    }
+
+    public void HandleWobble(float amount)
+    {
+        _playerCam.GetComponent<CinemachineBasicMultiChannelPerlin>().AmplitudeGain = _defaultNoiseAmplitude + amount;
+    }
+
+    public void SetNoiseToDefault()
+    {
+        _playerCam.GetComponent<CinemachineBasicMultiChannelPerlin>().AmplitudeGain = _defaultNoiseAmplitude;
+        _playerCam.GetComponent<CinemachineBasicMultiChannelPerlin>().FrequencyGain = _defaultNoiseFrequency;
+    }
+
+    public float GetDefaultNoiseAmplitude()
+    {
+        return _defaultNoiseAmplitude;
     }
 }

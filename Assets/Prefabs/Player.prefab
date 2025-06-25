@@ -1,5 +1,72 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &509619935139670425
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3257648264477638287}
+  - component: {fileID: 2602991820682785726}
+  - component: {fileID: 1141210077501705463}
+  m_Layer: 0
+  m_Name: DetectionSphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3257648264477638287
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 509619935139670425}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6376172993960496680}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &2602991820682785726
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 509619935139670425}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 6
+  m_Center: {x: 0, y: 0, z: 0.0000019073486}
+--- !u!114 &1141210077501705463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 509619935139670425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a61e8668eedabcb43b8eee6d5a04d97c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerMovement: {fileID: 421481186244702650}
 --- !u!1 &1704150908745257623
 GameObject:
   m_ObjectHideFlags: 0
@@ -72,6 +139,7 @@ Transform:
   - {fileID: 2447034041008937998}
   - {fileID: 5516105368901533992}
   - {fileID: 2995712957789828107}
+  - {fileID: 3257648264477638287}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0.101, y: -0.928, z: 0.358}
 --- !u!33 &6966917379660629400
@@ -205,6 +273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _MaxHealth: 100
   _overhealDecay: 1
+  _playerCamera: {fileID: 5638793910137333041}
 --- !u!114 &5638793910137333041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,6 +286,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19758fa980b20bf48882552ffe6926dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _defaultNoiseAmplitude: 0.7
+  _defaultNoiseFrequency: 0.4
   _sensitivityX: 12
   _sensitivityY: 12
 --- !u!114 &421481186244702650

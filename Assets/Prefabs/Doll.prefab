@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 5818778731585858252}
   m_Layer: 0
   m_Name: Doll
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -157,7 +157,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3068754925192367801}
-  - {fileID: 8031076257634163321}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &178509276768828666
@@ -216,7 +215,7 @@ MonoBehaviour:
   m_Area: 0
   m_OverrideGenerateLinks: 0
   m_GenerateLinks: 0
-  m_IgnoreFromBuild: 0
+  m_IgnoreFromBuild: 1
   m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff
 --- !u!136 &9026760785268214562
@@ -435,12 +434,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9134422316760528763}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.038, z: 0.027}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0.010397589, y: 0.00000011920282, z: -0.0000000012394856, w: 0.99994594}
+  m_LocalPosition: {x: -0, y: 0.00222, z: 0.00053}
+  m_LocalScale: {x: 0.01, y: 0.010000004, z: 0.0100000035}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7531027571008452047}
+  m_Father: {fileID: 6437881462690055867}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &3250702988107262290
 PrefabInstance:
@@ -839,6 +838,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8379829128552624105, guid: 1e03954d681207946b2f5b1a8db7d6e1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3378911389352208054}
+    - targetCorrespondingSourceObject: {fileID: 8379829128552624105, guid: 1e03954d681207946b2f5b1a8db7d6e1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8031076257634163321}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1e03954d681207946b2f5b1a8db7d6e1, type: 3}
       insertIndex: -1

@@ -62,16 +62,31 @@ public class EnemyDoll : MonoBehaviour
 
             if (_playerInView.transform.tag == "Player")
             {
-                _player = collision.gameObject.transform;
-                _detected = true;
-
-                _navAgent.destination = _player.position;
-
-                _navAgent.isStopped = false;
-                _animator.SetBool("isRunning", true);
-                _animator.SetBool("isAttacking", false);
+                EnterDetectedState(collision.gameObject.transform);
             }
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player" && !_detected)
+        {
+            EnterDetectedState(collision.gameObject.transform);
+
+        }
+    }
+
+    public void EnterDetectedState(Transform playerTransform)
+    {
+        _player = playerTransform;
+
+        _detected = true;
+
+        _navAgent.destination = _player.position;
+
+        _navAgent.isStopped = false;
+        _animator.SetBool("isRunning", true);
+        _animator.SetBool("isAttacking", false);
     }
 
     private bool IsInRange()
@@ -102,6 +117,11 @@ public class EnemyDoll : MonoBehaviour
     {
         _canMove = move;
 
+    }
+
+    public bool GetIsDead()
+    {
+        return _isDead;
     }
 
     public void TakeDamage(float damage)
