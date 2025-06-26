@@ -11,9 +11,12 @@ public class InputHandler : MonoBehaviour
     private InputAction _crouchAction;
     private InputAction _zoomAction;
     private InputAction _attackAction;
+    private InputAction _escapeAction;
 
     private PlayerMovement _playerMovement;
     private PlayerCamera _playerCamera;
+    private GameObject _menu;
+    private bool _isInMenu = false;
     [SerializeField] PlayerAttackHandler _playerAttack;
 
     private void OnEnable()
@@ -23,6 +26,8 @@ public class InputHandler : MonoBehaviour
 
         _playerMovement = GetComponent<PlayerMovement>();
         _playerCamera = GetComponent<PlayerCamera>();
+        _menu = GameObject.FindGameObjectWithTag("Menu");
+        _menu.SetActive(false);
     }
 
     private void Awake()
@@ -33,10 +38,33 @@ public class InputHandler : MonoBehaviour
         _crouchAction = InputSystem.actions.FindAction("Crouch");
         _zoomAction = InputSystem.actions.FindAction("Zoom");
         _attackAction = InputSystem.actions.FindAction("Attack");
+        _escapeAction = InputSystem.actions.FindAction("Escape");
     }
 
     private void Update()
     {
+        if (_escapeAction.WasPressedThisFrame())
+        {
+            if (!_isInMenu)
+            {
+                _isInMenu = true;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+
+                _menu.SetActive(true);
+            }
+            else
+            {
+                _isInMenu = false;
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                _menu.SetActive(false);
+            }
+        }
+
+        if (_isInMenu)
+            return;
+
         if (_sprintAction.WasPressedThisFrame())
             _playerMovement.HandleSprint(true);
         if (_sprintAction.WasReleasedThisFrame())
@@ -58,6 +86,8 @@ public class InputHandler : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_isInMenu)
+            return;
 
         _playerMovement.HandleMovement(_movementAction.ReadValue<Vector2>());
         _playerCamera.HandleZTitlt(_movementAction.ReadValue<Vector2>().x);
@@ -65,11 +95,22 @@ public class InputHandler : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (_isInMenu)
+            return;
+
         _playerCamera.HandleCamera(_lookAction.ReadValue<Vector2>());
     }
 
     private void OnDisable()
     {
         inputActions.FindActionMap("Player").Disable();
+    }
+
+    public void DisableIsInMenu()
+    {
+        _isInMenu = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        _menu.SetActive(false);
     }
 }

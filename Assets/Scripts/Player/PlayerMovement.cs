@@ -34,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     private float _moveSpeed;
     private float _stamina;
     private float _regenTimer;
+    private bool _isInMenu;
 
 
     void Start()
@@ -153,5 +154,15 @@ public class PlayerMovement : MonoBehaviour
     public float GetMaxStamina()
     {
         return _maxStamina;
+    }
+
+    public void SetIsInMenu(bool isInMenu)
+    {
+        _isInMenu = isInMenu;
+    }
+
+    public bool GetIsInMenu()
+    {
+        return _isInMenu;
     }
 }

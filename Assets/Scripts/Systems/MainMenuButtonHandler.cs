@@ -1,21 +1,15 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenuButtonHandler : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public static void StartGame()
     {
-
+        SceneManager.LoadScene("GameLevel");
     }
 
-    // Update is called once per frame
-    void Update()
+    public static void QuitDesktop()
     {
-
-    }
-
-    public void TestButton()
-    {
-        Debug.Log("Test Button Pressed");
+        Application.Quit();
     }
 }

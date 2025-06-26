@@ -10,12 +10,14 @@ public class PlayerHealth : MonoBehaviour
 
     private float _health;
     private RawImage _damageFlash;
+    private RawImage _healFlash;
 
     void Start()
     {
         _health = _MaxHealth;
 
         _damageFlash = GameObject.FindGameObjectWithTag("DamageFlash").GetComponent<RawImage>();
+        _healFlash = GameObject.FindGameObjectWithTag("HealFlash").GetComponent<RawImage>();
     }
 
     void Update()
@@ -36,11 +38,17 @@ public class PlayerHealth : MonoBehaviour
         _damageFlash.color = Color.white;
         DOTween.To(() => _damageFlash.color, x => _damageFlash.color = x, new Color(0, 0, 0, 0), 1f);
         _playerCamera.HandleShake(50);
-        Debug.Log(_health);
     }
 
     public void Heal(float amount)
     {
+        _healFlash.color = Color.white;
+        DOTween.To(() => _healFlash.color, x => _healFlash.color = x, new Color(0, 0, 0, 0), 1f);
         _health += amount;
+    }
+
+    public float GetHealth()
+    {
+        return _health;
     }
 }
