@@ -1,13 +1,14 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class EquipmentBobbing : MonoBehaviour
 {
-    [SerializeField] private float _bobSpeed = 7;
+    [SerializeField] private float _bobTime;
     [SerializeField] private GameObject _cameraPos;
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        transform.rotation = Quaternion.Lerp(transform.rotation, _cameraPos.transform.rotation, Time.deltaTime * _bobSpeed);
+        transform.DORotateQuaternion(_cameraPos.transform.rotation, _bobTime);
     }
 }

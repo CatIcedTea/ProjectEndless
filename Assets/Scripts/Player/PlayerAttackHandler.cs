@@ -6,9 +6,12 @@ public class PlayerAttackHandler : MonoBehaviour
 
     private bool _canAttack = true;
     private bool _firstAttack = true;
+    private AudioManager _audioManager;
+
 
     void Start()
     {
+        _audioManager = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<AudioManager>();
         _animator = GetComponent<Animator>();
     }
 
@@ -42,7 +45,7 @@ public class PlayerAttackHandler : MonoBehaviour
     public void EnableAttackHitbox()
     {
         GetComponentInChildren<BoxCollider>().enabled = true;
-
+        _audioManager.PlayAudio(_audioManager.attackSwing);
     }
 
     public void DisableAttackHitbox()

@@ -33,24 +33,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "LeanLeft",
-                    "type": "Button",
-                    "id": "c35641ea-f876-4b04-bc8d-0ad14d694295",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "LeanRight",
-                    "type": "Button",
-                    "id": "6c9ed33d-abdd-4642-bbf7-2c61f6ddc957",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Sprint",
                     "type": "Button",
                     "id": "d9b6d2c8-e73b-42f9-a3c6-11bdc0b8f02a",
@@ -175,33 +157,11 @@
                 {
                     "name": "",
                     "id": "30b5f72d-2ffa-4a5a-8d53-3d1245f051f2",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Interact",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "891d48d6-b89c-43b6-9b54-73cc917818a1",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "LeanLeft",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "8966d521-2234-4157-8227-8ece70e6e1b4",
                     "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "LeanRight",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

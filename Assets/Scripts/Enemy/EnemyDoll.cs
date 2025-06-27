@@ -1,3 +1,4 @@
+using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AI;
@@ -20,10 +21,15 @@ public class EnemyDoll : MonoBehaviour
     private float _stunTimer = 0;
     private bool _isDead = false;
 
+    private AudioManager _audioManager;
+
     void Start()
     {
+        _audioManager = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<AudioManager>();
         _navAgent.updatePosition = true;
         _health = _maxHealth;
+
+        StartCoroutine(idleSounds());
     }
 
     void Update()
@@ -49,6 +55,17 @@ public class EnemyDoll : MonoBehaviour
             _animator.SetBool("isRunning", false);
             _animator.SetBool("isAttacking", true);
         }
+    }
+
+    private IEnumerator idleSounds()
+    {
+        yield return new WaitForSeconds(Random.Range(10, 60));
+        if (!_isDead)
+        {
+            _audioManager.PlayAudioAtLocation(_audioManager.dollIdle, transform.position);
+            StartCoroutine(idleSounds());
+        }
+
     }
 
     private void OnTriggerEnter(Collider collision)
@@ -78,6 +95,7 @@ public class EnemyDoll : MonoBehaviour
 
     public void EnterDetectedState(Transform playerTransform)
     {
+        _audioManager.PlayAudioAtLocation(_audioManager.dollDamage, transform.position);
         _player = playerTransform;
 
         _detected = true;
@@ -87,6 +105,8 @@ public class EnemyDoll : MonoBehaviour
         _navAgent.isStopped = false;
         _animator.SetBool("isRunning", true);
         _animator.SetBool("isAttacking", false);
+
+        _animator.Play("Running");
     }
 
     private bool IsInRange()
@@ -126,6 +146,7 @@ public class EnemyDoll : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        _audioManager.PlayAudio(_audioManager.playerImpact);
         if (!_detected)
         {
             _player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -147,6 +168,7 @@ public class EnemyDoll : MonoBehaviour
                 _animator.SetBool("isDead", true);
                 GetComponent<CapsuleCollider>().enabled = false;
                 _isDead = true;
+                _audioManager.PlayAudioAtLocation(_audioManager.dollDeath, transform.position);
             }
             else
             {
@@ -154,6 +176,7 @@ public class EnemyDoll : MonoBehaviour
                 {
                     _animator.Play("Damaged");
                     _stunTimer = _stunTime;
+                    _audioManager.PlayAudioAtLocation(_audioManager.dollDamage, transform.position);
                 }
             }
         }

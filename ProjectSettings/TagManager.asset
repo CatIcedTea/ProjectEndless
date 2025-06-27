@@ -12,6 +12,13 @@ TagManager:
   - Enemy
   - HealFlash
   - Menu
+  - Interactable
+  - Message
+  - GameOver
+  - Dialogue
+  - WinCondition
+  - Options
+  - AudioManager
   layers:
   - Default
   - TransparentFX

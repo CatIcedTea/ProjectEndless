@@ -81,4 +81,15 @@ public class PlayerCamera : MonoBehaviour
     {
         return _defaultNoiseAmplitude;
     }
+
+    public void SetSensitivity(float val)
+    {
+        _sensitivityX = val;
+        _sensitivityY = val;
+    }
+
+    public float GetSensitivity()
+    {
+        return _sensitivityX;
+    }
 }

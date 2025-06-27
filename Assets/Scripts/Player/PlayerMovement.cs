@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -9,16 +10,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _sprintStaminaCost;
     [SerializeField] private float _acceleration;
     [SerializeField] private float _sprintAcceleration;
-    [SerializeField] private float _maxSpeed;
-    [SerializeField] private float _maxAirSpeed;
-    [SerializeField] private float _jumpHeight;
+
     [SerializeField] private Transform _playerBasis;
     [SerializeField] private float _friction;
 
     [Header("Crouching")]
     [SerializeField] private float _crouchSpeed;
     [SerializeField] private float _crouchInitialYScaling;
-    [SerializeField] private float _crouchFriction;
     [SerializeField] private float _crouchYScaling;
 
     [Header("Floor Check")]
@@ -36,12 +34,15 @@ public class PlayerMovement : MonoBehaviour
     private float _regenTimer;
     private bool _isInMenu;
 
+    private AudioManager _audioManager;
+    private bool _isPlayingFootstep = false;
 
     void Start()
     {
         _moveSpeed = _acceleration;
         _rigidBody = GetComponent<Rigidbody>();
         _playerCamera = GetComponent<PlayerCamera>();
+        _audioManager = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<AudioManager>();
 
         _stamina = _maxStamina;
         _regenTimer = 0;
@@ -89,6 +90,9 @@ public class PlayerMovement : MonoBehaviour
         _moveDir = input.x * _playerBasis.right + input.y * _playerBasis.forward;
         if (_isOnFloor)
         {
+            if (input != Vector2.zero && !_isPlayingFootstep)
+                StartCoroutine(PlayFootstepAudio());
+
             _rigidBody.AddForce(_moveDir * _moveSpeed, ForceMode.Force);
             _rigidBody.linearDamping = _friction;
         }
@@ -99,7 +103,29 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
+    }
 
+    private IEnumerator PlayFootstepAudio()
+    {
+        _isPlayingFootstep = true;
+        if (_isSprinting)
+        {
+            _audioManager.PlayAudio(_audioManager.footstep);
+            yield return new WaitForSeconds(0.25f);
+        }
+        else if (_isCrouching)
+        {
+            _audioManager.PlayAudio(_audioManager.footstep);
+            yield return new WaitForSeconds(0.7f);
+        }
+        else
+        {
+            _audioManager.PlayAudio(_audioManager.footstep);
+            yield return new WaitForSeconds(0.5f);
+        }
+
+
+        _isPlayingFootstep = false;
     }
 
     public void HandleSprint(bool isSprinting)

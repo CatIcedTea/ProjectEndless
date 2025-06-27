@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Dialogue : MonoBehaviour
 {
@@ -18,46 +19,74 @@ public class Dialogue : MonoBehaviour
 
     private string[] _currentText;
     private int _lineIndex;
+    private int _characterCounter;
+    private bool _isInDialogue;
+    private bool _isInWinState = false;
 
     private readonly char[] _punctuationArr = new char[] { '.', ',', '!', '?' };
 
+    private AudioManager _audioManager;
+
     void Start()
     {
+        _audioManager = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<AudioManager>();
         _dialogueText = GetComponent<DialogueText>();
         _boxRect = GetComponent<RectTransform>();
         _text.maxVisibleCharacters = 0;
+        _characterCounter = 0;
 
         _boxRect.transform.localScale = Vector3.zero;
 
-        _currentText = _dialogueText.GetText(1);
+        _currentText = _dialogueText.GetText(0);
         _text.text = _currentText[0];
         WriteText();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void WriteText()
     {
-    }
-
-    private void WriteText()
-    {
+        _isInDialogue = true;
         _boxRect.transform.DOScale(new Vector3(1, 1, 1), 0.25f);
+        _audioManager.PlayAudio(_audioManager.voiceId);
         IdleWobble();
         StartCoroutine(WriteNextCharacter());
+    }
+
+    public void WriteText(string[] textArr)
+    {
+        _boxRect.transform.localScale = Vector3.zero;
+        StopAllCoroutines();
+
+        _lineIndex = 0;
+        _currentText = textArr;
+        _text.text = _currentText[0];
+        _text.maxVisibleCharacters = 0;
+        _characterCounter = 0;
+
+        WriteText();
     }
 
     private IEnumerator WriteNextCharacter()
     {
         _text.maxVisibleCharacters++;
+        _characterCounter++;
+        _audioManager.PlayAudio(_audioManager.menuHover);
 
-        if (_punctuationArr.Contains(_text.text[_text.maxVisibleCharacters - 1]))
+        if (_text.text[_characterCounter - 1].Equals('<'))
+        {
+            while (!_text.text[_characterCounter - 1].Equals('>'))
+            {
+                _characterCounter++;
+            }
+        }
+
+        if (_punctuationArr.Contains(_text.text[_characterCounter - 1]))
         {
             yield return new WaitForSeconds(_typewriterPunctuationLength);
         }
         else
             yield return new WaitForSeconds(_typewriterLength);
 
-        if (_text.maxVisibleCharacters < _text.text.Length)
+        if (_characterCounter < _text.text.Length)
             StartCoroutine(WriteNextCharacter());
         else
         {
@@ -66,18 +95,30 @@ public class Dialogue : MonoBehaviour
             if (_lineIndex < _currentText.Length - 1)
             {
                 _text.maxVisibleCharacters = 0;
+                _characterCounter = 0;
                 _lineIndex++;
                 _text.text = _currentText[_lineIndex];
                 StartCoroutine(WriteNextCharacter());
                 _boxRect.transform.DOScale(Vector3.zero, 0.25f).OnComplete(() => _boxRect.transform.DOScale(Vector3.one, 0.25f));
+                _audioManager.PlayAudio(_audioManager.voiceId);
             }
             else
-                _boxRect.transform.DOScale(Vector3.zero, 0.25f);
+            {
+                if (_isInWinState)
+                {
+                    _boxRect.transform.DOScale(Vector3.zero, 0.25f).OnComplete(() => SendToMainMenu());
+                }
+                else
+                    _boxRect.transform.DOScale(Vector3.zero, 0.25f).OnComplete(() => _isInDialogue = false);
+            }
         }
     }
 
     private void IdleWobble()
     {
+        if (!_isInDialogue)
+            return;
+
         if (!flipRotate)
         {
             flipRotate = true;
@@ -88,5 +129,16 @@ public class Dialogue : MonoBehaviour
             flipRotate = false;
             _boxRect.transform.DORotate(new Vector3(0, 0, -3f), 2f).OnComplete(() => IdleWobble());
         }
+    }
+
+    public void EnableWinState()
+    {
+        _isInWinState = true;
+    }
+
+    private void SendToMainMenu()
+    {
+        DOTween.KillAll();
+        SceneManager.LoadScene("MainMenu");
     }
 }

@@ -7,6 +7,8 @@ public class Medkit : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             collision.GetComponent<PlayerHealth>().Heal(50);
+            AudioManager audioManager = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<AudioManager>();
+            audioManager.PlayAudio(audioManager.healthPickup);
             Destroy(gameObject);
         }
     }

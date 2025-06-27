@@ -12,12 +12,18 @@ public class InputHandler : MonoBehaviour
     private InputAction _zoomAction;
     private InputAction _attackAction;
     private InputAction _escapeAction;
+    private InputAction _interactAction;
 
     private PlayerMovement _playerMovement;
     private PlayerCamera _playerCamera;
     private GameObject _menu;
+    private GameObject _optionsMenu;
     private bool _isInMenu = false;
+    private bool _isGameOver = false;
     [SerializeField] PlayerAttackHandler _playerAttack;
+    [SerializeField] InteractionHandler _interactHandler;
+
+    private AudioManager _audioManager;
 
     private void OnEnable()
 
@@ -26,12 +32,16 @@ public class InputHandler : MonoBehaviour
 
         _playerMovement = GetComponent<PlayerMovement>();
         _playerCamera = GetComponent<PlayerCamera>();
-        _menu = GameObject.FindGameObjectWithTag("Menu");
-        _menu.SetActive(false);
+
+        _audioManager = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<AudioManager>();
     }
 
     private void Awake()
     {
+        _menu = GameObject.FindGameObjectWithTag("Menu");
+
+        _optionsMenu = GameObject.FindGameObjectWithTag("Options");
+
         _movementAction = InputSystem.actions.FindAction("Movement");
         _lookAction = InputSystem.actions.FindAction("Look");
         _sprintAction = InputSystem.actions.FindAction("Sprint");
@@ -39,26 +49,29 @@ public class InputHandler : MonoBehaviour
         _zoomAction = InputSystem.actions.FindAction("Zoom");
         _attackAction = InputSystem.actions.FindAction("Attack");
         _escapeAction = InputSystem.actions.FindAction("Escape");
+        _interactAction = InputSystem.actions.FindAction("Interact");
+    }
+
+    public void Start()
+    {
+        _menu.SetActive(false);
+        _optionsMenu.SetActive(false);
     }
 
     private void Update()
     {
-        if (_escapeAction.WasPressedThisFrame())
+        if (_escapeAction.WasPressedThisFrame() && !_isGameOver)
         {
             if (!_isInMenu)
             {
-                _isInMenu = true;
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-
-                _menu.SetActive(true);
+                _audioManager.PlayAudio(_audioManager.menuHover);
+                EnableIsInMenu();
             }
             else
             {
-                _isInMenu = false;
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-                _menu.SetActive(false);
+                _audioManager.PlayAudio(_audioManager.menuCancel);
+                DisableIsInMenu();
+                _optionsMenu.SetActive(false);
             }
         }
 
@@ -82,6 +95,9 @@ public class InputHandler : MonoBehaviour
 
         if (_attackAction.WasPressedThisFrame())
             _playerAttack.HandleAttack();
+
+        if (_interactAction.WasPressedThisFrame())
+            _interactHandler.StartInteraction();
     }
 
     private void FixedUpdate()
@@ -104,6 +120,22 @@ public class InputHandler : MonoBehaviour
     private void OnDisable()
     {
         inputActions.FindActionMap("Player").Disable();
+    }
+
+    public void EnableGameOverState()
+    {
+        _isGameOver = true;
+        _isInMenu = true;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public void EnableIsInMenu()
+    {
+        _isInMenu = true;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        _menu.SetActive(true);
     }
 
     public void DisableIsInMenu()

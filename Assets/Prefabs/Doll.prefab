@@ -171,8 +171,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d3e479b12e9545429b47f723373c7f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 100
-  _stunTime: 6
+  _maxHealth: 80
+  _stunTime: 5
   _headPosition: {fileID: 8031076257634163321}
   _animator: {fileID: 3100195645212464075}
   _navAgent: {fileID: 4228948761189673770}
@@ -1037,7 +1037,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemy: {fileID: 178509276768828666}
   _attackBox: {fileID: 6462080725049817243}
-  _damage: 15
+  _damage: 10
 --- !u!65 &6462080725049817243
 BoxCollider:
   m_ObjectHideFlags: 0
